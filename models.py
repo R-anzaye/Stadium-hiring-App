@@ -5,14 +5,16 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
-# Association table for the many-to-many relationship between Pitches and Users through Bookings
 pitches_users = db.Table('pitches_users',
-    db.Column('pitch_id', db.Integer, db.ForeignKey('pitch.id'), primary_key=True),
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('pitch_id', db.Integer, db.ForeignKey('pitches.id'), primary_key=True),
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
     db.Column('date', db.DateTime, nullable=False, default=datetime.utcnow)
 )
 
+
 class User(db.Model, SerializerMixin):
+    __tablename__ = 'users'
+
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
@@ -22,7 +24,7 @@ class User(db.Model, SerializerMixin):
     bookings = db.relationship('Booking', backref='user', lazy=True)
     ratings = db.relationship('Rating', backref='user', lazy=True)
     pitches = db.relationship('Pitch', secondary=pitches_users, lazy='subquery',
-                              backref=db.backref('users', lazy=True))
+                              backref=db.backref('user', lazy=True))
 
     @validates('email')
     def validate_email(self, key, email):
@@ -31,6 +33,7 @@ class User(db.Model, SerializerMixin):
         return email
 
 class Pitch(db.Model, SerializerMixin):
+    __tablename__ = 'pitches'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(255), nullable=False)
@@ -41,14 +44,16 @@ class Pitch(db.Model, SerializerMixin):
     ratings = db.relationship('Rating', backref='pitch', lazy=True)
 
 class Booking(db.Model, SerializerMixin):
+    __tablename__ = 'bookings'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    pitch_id = db.Column(db.Integer, db.ForeignKey('pitch.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    pitch_id = db.Column(db.Integer, db.ForeignKey('pitches.id'), nullable=False)
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
 class Rating(db.Model, SerializerMixin):
+    __tablename__ = 'ratings'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    pitch_id = db.Column(db.Integer, db.ForeignKey('pitch.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    pitch_id = db.Column(db.Integer, db.ForeignKey('pitches.id'), nullable=False)
     rating = db.Column(db.Integer, nullable=False)
     comment = db.Column(db.Text, nullable=True)
