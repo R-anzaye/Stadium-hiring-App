@@ -51,9 +51,6 @@ function Home() {
                 <>
                   <form id="register-form">
                     <h2>Log in</h2>
-                    <label htmlFor="name">Name</label>
-                    <input type="text" id="name" name="name" placeholder="Name" />
-
                     <label htmlFor="email">Email</label>
                     <input type="text" id="email" name="email" placeholder="Email" />
 
@@ -62,9 +59,6 @@ function Home() {
 
                     <label htmlFor="password">Password</label>
                     <input type="password" id="password" name="password" placeholder="Password" />
-
-                    <label htmlFor="confirm-password">Confirm Password</label>
-                    <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" />
 
                     <button type="submit" onClick={handleClick}>Log In</button>
                   </form>
@@ -87,6 +81,10 @@ function Home() {
 
                   <label htmlFor="reg-password">Password</label>
                   <input type="password" id="reg-password" name="password" placeholder="Password" />
+
+                  <label htmlFor="confirm-password">Confirm Password</label>
+                  <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" />
+
 
                   <button type="submit" onClick={handleClick}>Register</button>
                 </form>
