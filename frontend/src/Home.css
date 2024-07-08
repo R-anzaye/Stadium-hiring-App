@@ -1,0 +1,257 @@
+* {
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Josefin Sans', sans-serif;
+  height: auto;
+  width: 1220px;
+  background-image: url(/ball.jpg);
+  background-size: cover; /* Cover the entire body */
+  background-position: center; /* Center the background image */
+  background-repeat: no-repeat; /* Do not repeat the background image */
+  background-attachment: fixed; /* Ensure the background image stays still */
+}
+
+#main {
+  width: 1220px;
+  height: auto;
+}
+
+.navbar {
+  background: local;
+  color: white;
+  width: 1220px;
+  height: 75px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 70px; /* Add margin to the right */
+  border-radius: 3px; /* Add border radius */
+  box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.8); /* Add heavy black box shadow */
+}
+
+.icon {
+  width: 200px;
+  height: 70px;
+}
+
+.logo {
+  color: orangered;
+  font-size: 35px;
+  padding-right: 20px;
+  margin-left: 30px;
+}
+
+.menu {
+  width: 100%;
+  text-align: right;
+}
+
+ul {
+  display: inline-block;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+ul li {
+  display: inline-block;
+  margin-left: 70px;
+  font-size: 20px;
+}
+
+ul li:first-child {
+  margin-left: 0;
+}
+
+ul li a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  transition: color 0.4s ease;
+}
+
+ul li a:hover {
+  color: black;
+}
+
+.search {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  margin: 2%;
+}
+
+.tent {
+  width: 1220px;
+  height: auto;
+  color: black;
+  position: relative;
+}
+
+.tent h1 {
+  font-size: 50px;
+  padding-left: 20px;
+  margin-top: 7%;
+  letter-spacing: 2px;
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.tent .par {
+  padding: 30px;
+  padding-bottom: 30px;
+  font-size: 40px;
+  letter-spacing: 1px;
+  line-height: 45px;
+  font-weight: bold;
+}
+
+.srch {
+  width: 400px;
+  height: 40px;
+  background: white;
+  border: 1px solid rgb(0, 0, 0);
+  margin-top: 13px;
+  color: orangered;
+  font-size: 18px;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+footer {
+  position: relative;
+  left: 0;
+  bottom: 0;
+  width: 1285px;
+  height: 400px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.5) 50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+footer p:nth-child(1) {
+  font-size: 30px;
+  font-weight: bold;
+  color: orangered;
+  margin-bottom: 25px;
+}
+
+footer p:nth-child(2) {
+  color: orangered;
+  font-size: 17px;
+  width: 500px;
+  text-align: center;
+  line-height: 26px;
+}
+
+.social {
+  display: flex;
+}
+
+.social a {
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: orangered;
+  border-radius: 50%;
+  margin: 22px 10px;
+  color: black;
+  text-decoration: none;
+  font-size: 24px;
+}
+
+.social a:hover {
+  transform: scale(1.4);
+  transition: 0.3s;
+  background-color: transparent;
+  border: 2px solid orangered;
+  cursor: pointer;
+}
+
+footer .copy p {
+  color: orangered;
+  font-size: 17px;
+  width: 500px;
+  text-align: center;
+  line-height: 26px;
+  font-weight: bold;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.pitch-container {
+  width: 60%;
+  margin-right: 6%;
+  margin-left:1%; /* Adjusted margin */
+}
+
+.welcome {
+  font-size: 120px; /* Increased font size */
+  font-weight: bold;
+}
+
+.parh {
+  font-size: 30px; /* Increased font size */
+  font-style: italic;
+}
+
+.get-started-btn {
+  width: 150px;
+  background-color: orangered;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin: 40px;
+  transition: background-color 0.4s;
+}
+
+.get-started-btn:hover {
+  background-color: #ff9b06;
+}
+
+.form-container {
+  width: 35%; /* Adjusted width */
+  margin-left: 5%;
+}
+
+#register-form {
+  display: flex;
+  flex-direction: column;
+}
+
+#register-form label {
+  margin-bottom: 5px;
+}
+
+#register-form input,
+#register-form textarea {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#register-form button {
+  padding: 10px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
