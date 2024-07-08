@@ -210,7 +210,8 @@ footer .copy p {
   font-style: italic;
 }
 
-.get-started-btn {
+.get-started-btn,
+.register-btn {
   width: 150px;
   background-color: orangered;
   color: white;
@@ -221,7 +222,8 @@ footer .copy p {
   transition: background-color 0.4s;
 }
 
-.get-started-btn:hover {
+.get-started-btn:hover,
+.register-btn:hover {
   background-color: #ff9b06;
 }
 
@@ -255,3 +257,4 @@ footer .copy p {
   cursor: pointer;
   border-radius: 4px;
 }
+
