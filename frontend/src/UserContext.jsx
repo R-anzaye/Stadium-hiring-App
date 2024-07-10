@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export const UserContext = createContext();
+
 export const UserProvider = ({ children }) => {
   const nav = useNavigate();
 
@@ -13,25 +14,33 @@ export const UserProvider = ({ children }) => {
 
   const [currentUser, setCurrentUser] = useState(null);
 
+  
   const fetchUser = () => {
     if (authToken) {
-      return fetch("http://127.0.0.1:5555/current_user", {
+      fetch("http://127.0.0.1:5555/current_user", {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
       })
-        .then((res) => res.json())
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(res.statusText);
+          }
+          return res.json();
+        })
         .then((user) => {
           setCurrentUser(user);
+        })
+        .catch((error) => {
+          console.error("Error fetching user:", error);
+          toast.error("Failed to fetch user. Please try again later.");
+          setCurrentUser(null);
         });
+    } else {
+      setCurrentUser(null);
     }
   };
-
-  useEffect(() => {
-    fetchUser();
-  }, [authToken]);
-
-  // Register User
+  
   const register = (username, email, password) => {
     return fetch("http://127.0.0.1:5555/users", {
       method: "POST",
@@ -60,7 +69,6 @@ export const UserProvider = ({ children }) => {
       });
   };
 
-  // Login User
   const login = (email, password) => {
     return fetch("http://127.0.0.1:5555/login", {
       method: "POST",

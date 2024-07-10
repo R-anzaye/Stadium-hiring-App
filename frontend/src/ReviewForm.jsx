@@ -1,59 +1,112 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import ReviewsContext from "./ReviewsContext";
+import axios from 'axios'; 
+import { ReviewsContext } from "./ReviewsContext";
+import { UserContext } from "./UserContext";
 
 function ReviewForm() {
   const { reviews, addReview, updateReview, deleteReview, fetchRatings } = useContext(ReviewsContext);
-  const [newReview, setNewReview] = useState("");
-  const [editReview, setEditReview] = useState(null);
+  const { currentUser } = useContext(UserContext);
+  
+  const [comment, setComment] = useState("");
+  const [rating, setRating] = useState(0);
+  const [editMode, setEditMode] = useState(false);
+  const [selectedReview, setSelectedReview] = useState(null);
+  const [selectedPitchName, setSelectedPitchName] = useState("");
+  const [pitches, setPitches] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchRatings(); // Fetch ratings when component mounts
+    fetchRatings();
+    fetchPitches(); // Fetch pitches when the component mounts
   }, []);
 
+  const fetchPitches = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:5555/get_pitches',{
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+      const data = await response.json();
+      setPitches(data.pitches);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching pitches:', error);
+      setLoading(false);
+    }
+  };
+
   const handleAddReview = () => {
-    if (newReview.trim() === "") {
-      toast.error("Review cannot be empty");
+    if (!comment.trim() || rating < 1 || rating > 5 || !selectedPitchName) {
+      toast.error("Please enter comment, rating (1-5), and select a pitch.");
       return;
     }
 
-    const review = {
-      id: Date.now(),
-      text: newReview,
+    const pitch = pitches.find(p => p.name === selectedPitchName); // Find selected pitch
+    if (!pitch) {
+      toast.error("Pitch information not available.");
+      return;
+    }
+
+    if (!currentUser || !currentUser.id) {
+      toast.error("User information not available.");
+      return;
+    }
+
+    const newReview = {
+      comment: comment.trim(),
+      rating: parseInt(rating),
+      pitch_id: pitch.id,
+      user_id: currentUser.id,
     };
 
-    addReview(review);
-    setNewReview("");
-    toast.success("Review added successfully");
+    addReview(newReview);
+    resetForm();
   };
 
   const handleUpdateReview = () => {
-    if (newReview.trim() === "") {
-      toast.error("Review cannot be empty");
+    if (!selectedReview || !selectedReview.id) {
+      toast.error("No review selected for update.");
+      return;
+    }
+
+    if (!comment.trim() || rating < 1 || rating > 5) {
+      toast.error("Please enter both comment and rating (1-5).");
       return;
     }
 
     const updatedReview = {
-      ...editReview,
-      text: newReview,
+      id: selectedReview.id,
+      comment: comment.trim(),
+      rating: parseInt(rating),
     };
 
     updateReview(updatedReview);
-    setEditReview(null);
-    setNewReview("");
-    toast.success("Review updated successfully");
+    resetForm();
   };
 
-  const handleEditClick = (review) => {
-    setEditReview(review);
-    setNewReview(review.text);
+  const handleEditReview = (review) => {
+    setSelectedReview(review);
+    setEditMode(true);
+    setComment(review.comment);
+    setRating(review.rating);
   };
 
-  const handleDeleteClick = (id) => {
+  const handleDelete = (id) => {
     deleteReview(id);
-    toast.success("Review deleted successfully");
+    resetForm();
+  };
+
+  const resetForm = () => {
+    setComment("");
+    setRating(0);
+    setSelectedReview(null);
+    setEditMode(false);
+    setSelectedPitchName("");
   };
 
   return (
@@ -64,15 +117,9 @@ function ReviewForm() {
         </div>
         <div className="menu">
           <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/bookpitch">BookPitch</Link>
-            </li>
-            <li>
-              <Link to="/reviews">Reviews</Link>
-            </li>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/bookpitch">BookPitch</Link></li>
+            <li><Link to="/reviews">Reviews</Link></li>
           </ul>
         </div>
       </div>
@@ -80,24 +127,65 @@ function ReviewForm() {
         <h1>Reviews</h1>
         <p className="par">Check out what others say about our stadiums.</p>
       </div>
-      <div className="search">
-        <input className="srch" type="search" placeholder="Search" />
-      </div>
+    
       <div className="container">
-        <input
-          type="text"
-          value={newReview}
-          onChange={(e) => setNewReview(e.target.value)}
-          placeholder="Write a review"
-        />
-        <div className="reviews-list">
-          {reviews.map((review) => (
-            <div key={review.id} className="review-item">
-              <p>{review.text}</p>
-              <button onClick={() => handleEditClick(review)}>Edit</button>
-              <button onClick={() => handleDeleteClick(review.id)}>Delete</button>
+      {Array.isArray(reviews) && reviews.map((review, index) => (
+  <div key={index} className="review-item">
+    {review && review.pitch_name ? (
+      <>
+        <h3>{review.pitch_name}</h3>
+        <p>{review.comment}</p>
+        <p>Rating: {review.rating}</p>
+        {(currentUser && review.user_id === currentUser.id) && (
+          <>
+            {editMode && selectedReview?.id === review.id ? (
+              <>
+                <button onClick={handleUpdateReview}>Update Review</button>
+                <button onClick={() => handleDelete(selectedReview.id)}>Delete Review</button>
+              </>
+            ) : (
+              <button onClick={() => handleEditReview(review)}>Edit Review</button>
+            )}
+          </>
+        )}
+      </>
+    ) : (
+      <p>Review data is incomplete or not loaded yet.</p>
+    )}
+  </div>
+))}
+
+        <div className="add-review">
+          {!editMode && (
+            <button onClick={() => setEditMode(!editMode)}>Add Review</button>
+          )}
+          {editMode && (
+            <div>
+              <select value={selectedPitchName} onChange={(e) => setSelectedPitchName(e.target.value)}>
+                <option value="">Select a Pitch</option>
+                {pitches && Array.isArray(pitches) && pitches.map(pitch => (
+                  <option key={pitch.id} value={pitch.name}>{pitch.name}</option>
+                ))}
+              </select>
+              <input
+                type="text"
+                placeholder="Your Comment"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+              />
+              <input
+                type="number"
+                placeholder="Rating (1-5)"
+                value={isNaN(rating) ? "" : rating.toString()}
+                onChange={(e) => setRating(parseInt(e.target.value))}
+              />
+              {selectedReview ? (
+                <button onClick={handleUpdateReview}>Update Review</button>
+              ) : (
+                <button onClick={handleAddReview}>Submit Review</button>
+              )}
             </div>
-          ))}
+          )}
         </div>
       </div>
       <footer>
@@ -107,21 +195,14 @@ function ReviewForm() {
           on our social media platforms at pitch.ke
         </p>
         <div className="social">
-          <a href="#">
-            <i className="fab fa-instagram"></i>
-          </a>
-          <a href="#">
-            <i className="fab fa-linkedin"></i>
-          </a>
-          <a href="#">
-            <i className="fab fa-whatsapp"></i>
-          </a>
+          <a href="#"><i className="fab fa-instagram"></i></a>
+          <a href="#"><i className="fab fa-linkedin"></i></a>
+          <a href="#"><i className="fab fa-whatsapp"></i></a>
         </div>
         <div className="copy">
           <p>&copy; 2024 PresentSpotter. All Rights Reserved</p>
         </div>
       </footer>
-      {/* Toast Container */}
       <ToastContainer />
     </div>
   );

@@ -285,3 +285,43 @@ footer .copy p {
   font-size: 30px; /* Email font size */
   margin-top: 40px; /* Adjust margin as needed */
 }
+/* styles.css */
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  color:black;
+  margin: 20px;
+}
+
+.card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  width: 300px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: greenyellow;
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+
+.card p {
+  font-size: 1rem;
+  color:black;
+  margin-bottom: 8px;
+}
+
+.card span {
+  font-weight: bold;
+}

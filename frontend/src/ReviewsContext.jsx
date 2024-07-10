@@ -1,11 +1,12 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
-import { UserContext } from "./UserContext"; // Adjust the import path as needed
+import { UserContext } from "./UserContext";
+import { toast } from "react-toastify";
 
-const ReviewsContext = createContext();
+export const ReviewsContext = createContext();
 
 export const ReviewsProvider = ({ children }) => {
   const [reviews, setReviews] = useState([]);
-  const { authToken } = useContext(UserContext);
+  const { authToken } = useContext(UserContext); // Assuming authToken is available from UserContext
 
   useEffect(() => {
     fetchRatings();
@@ -45,56 +46,61 @@ export const ReviewsProvider = ({ children }) => {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          setReviews([...reviews, review]);
-          alert(data.success);
+          setReviews([...reviews, data.review]); // Assuming data.review contains the newly added review object
+          toast.success("Review added successfully");
         } else {
-          alert(data.error || "Something went wrong");
+          toast.error(data.error || "Something went wrong");
         }
+      })
+      .catch((error) => {
+        console.error("Error adding review:", error);
+        toast.error("Failed to add review. Please try again later.");
       });
   };
 
   // Update a review
-  const updateReview = (updatedReview) => {
-    fetch(`http://127.0.0.1:5555/ratings/${updatedReview.id}`, {
+  const updateReview = (review) => {
+    fetch(`http://127.0.0.1:5555/ratings/${review.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${authToken}`,
       },
-      body: JSON.stringify(updatedReview),
+      body: JSON.stringify(review),
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.message) {
-          setReviews(
-            reviews.map((review) =>
-              review.id === updatedReview.id ? updatedReview : review
-            )
-          );
-          alert(data.message);
+        if (data.success) {
+          setReviews(reviews.map(r => r.id === review.id ? data.review : r)); // Assuming data.review contains the updated review object
+          toast.success("Review updated successfully");
         } else {
-          alert("Something went wrong");
+          toast.error(data.error || "Something went wrong");
         }
+      })
+      .catch((error) => {
+        console.error("Error updating review:", error);
+        toast.error("Failed to update review. Please try again later.");
       });
   };
 
   // Delete a review
-  const deleteReview = (id) => {
-    fetch(`http://127.0.0.1:5555/ratings/${id}`, {
+  const deleteReview = (reviewId) => {
+    fetch(`http://127.0.0.1:5555/ratings/${reviewId}`, {
       method: "DELETE",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${authToken}`,
       },
     })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.message) {
-          setReviews(reviews.filter((review) => review.id !== id));
-          alert(data.message);
-        } else {
-          alert("Something went wrong");
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to delete review");
         }
+        setReviews(reviews.filter(review => review.id !== reviewId));
+        toast.success("Review deleted successfully");
+      })
+      .catch((error) => {
+        console.error("Error deleting review:", error);
+        toast.error("Failed to delete review. Please try again later.");
       });
   };
 
