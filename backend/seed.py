@@ -5,15 +5,12 @@ import random
 
 def seed_users():
     users = [
-        User(username='Wendy', email='wendykariuki@gmail.com', password= bcrypt.generate_password_hash('password1').decode('utf-8'), is_admin=False),
-        User(username='Reuben', email='rickreuben@gmail.com', password= bcrypt.generate_password_hash('heyyy').decode('utf-8'), is_admin=False),
+        User(username='Wendy', email='wendykariuki@gmail.com', password=bcrypt.generate_password_hash('password1').decode('utf-8'), is_admin=False),
+        User(username='Reuben', email='rickreuben@gmail.com', password=bcrypt.generate_password_hash('heyyy').decode('utf-8'), is_admin=False),
         User(username='Ryan', email='ryananzaye@gmail.com', password=bcrypt.generate_password_hash('adminpass1').decode('utf-8'), is_admin=True),
     ]
-    for user in users:
-     db.session.add(user)
-    
+    db.session.add_all(users)
     db.session.commit()
-
 
 def seed_pitches():
     pitches = [
@@ -53,13 +50,7 @@ def seed_pitches():
             image_url='https://example.com/sansiro.jpg'
         ),
     ]
-    # Assuming you have a database session or some method to add these pitches to your database
-    for pitch in pitches:
-        db.session.add(pitch)
-    db.session.commit()
-    for pitch in pitches :
-     db.session.add(pitch)
-    
+    db.session.add_all(pitches)
     db.session.commit()
 
 def seed_bookings():
@@ -70,9 +61,7 @@ def seed_bookings():
         Booking(pitch_id=random.choice(pitches).id, user_id=random.choice(users).id, date=datetime.now()),
         Booking(pitch_id=random.choice(pitches).id, user_id=random.choice(users).id, date=datetime.now()),
     ]
-    for booking in bookings:
-     db.session.add(booking)
-
+    db.session.add_all(bookings)
     db.session.commit()
 
 def seed_ratings():
@@ -83,8 +72,7 @@ def seed_ratings():
         Rating(pitch_id=random.choice(pitches).id, user_id=random.choice(users).id, rating=random.randint(1, 5), comment='Great pitch!'),
         Rating(pitch_id=random.choice(pitches).id, user_id=random.choice(users).id, rating=random.randint(1, 5), comment='Not bad.'),
     ]
-    for rating in ratings:
-     db.session.add(rating)
+    db.session.add_all(ratings)
     db.session.commit()
 
 def seed_data():

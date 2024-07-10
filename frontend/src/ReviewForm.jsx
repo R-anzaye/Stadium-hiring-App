@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ReviewsContext from "./ReviewsContext";
 
 function ReviewForm() {
-  const { reviews, addReview, updateReview, deleteReview } = useContext(ReviewsContext);
+  const { reviews, addReview, updateReview, deleteReview, fetchRatings } = useContext(ReviewsContext);
   const [newReview, setNewReview] = useState("");
   const [editReview, setEditReview] = useState(null);
+
+  useEffect(() => {
+    fetchRatings(); // Fetch ratings when component mounts
+  }, []);
 
   const handleAddReview = () => {
     if (newReview.trim() === "") {
@@ -52,7 +56,6 @@ function ReviewForm() {
     toast.success("Review deleted successfully");
   };
 
-
   return (
     <div id="main">
       <div className="navbar">
@@ -78,15 +81,16 @@ function ReviewForm() {
         <p className="par">Check out what others say about our stadiums.</p>
       </div>
       <div className="search">
-        <input className="srch" type="search" placeholder="Search"  />
+        <input className="srch" type="search" placeholder="Search" />
       </div>
       <div className="container">
-      <input
+        <input
           type="text"
           value={newReview}
           onChange={(e) => setNewReview(e.target.value)}
           placeholder="Write a review"
-        /><div className="reviews-list">
+        />
+        <div className="reviews-list">
           {reviews.map((review) => (
             <div key={review.id} className="review-item">
               <p>{review.text}</p>

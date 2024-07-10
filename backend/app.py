@@ -285,5 +285,35 @@ def delete_rating(id):
     db.session.commit()
     return jsonify({"message": "Rating deleted successfully"}), 200
 
+# Get all ratings
+from flask import jsonify
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from models import Rating, Pitch  # Assuming you have your SQLAlchemy models defined
+
+@app.route('/ratings_list', methods=['GET'])
+@jwt_required()
+def get_all_ratings():
+    ratings = Rating.query.all()
+    if not ratings:
+        return jsonify({"message": "No ratings found"}), 404
+
+    rating_list = []
+    for rating in ratings:
+        pitch = Pitch.query.get(rating.pitch_id)  # Fetch the Pitch associated with the Rating
+        if not pitch:
+            continue  
+        rating_data = {
+            'id': rating.id,
+            'pitch_id': rating.pitch_id,
+            'user_id': rating.user_id,
+            'rating': rating.rating,
+            'comment': rating.comment,
+            'pitch_name': pitch.name,
+            'pitch_image_url': pitch.image_url
+        }
+        rating_list.append(rating_data)
+
+    return jsonify(rating_list), 200
+
 if __name__ == '__main__':
     app.run(debug=True)
