@@ -40,7 +40,7 @@ PresentSpotter is a web application for booking football pitches. The applicatio
 ### Prerequisites
 
 - Node.js
-- Python 3.x
+- Python *
 - pip
 - virtualenv
 
