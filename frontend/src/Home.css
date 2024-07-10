@@ -39,9 +39,10 @@ body {
 }
 
 .logo {
+  width:300px;
   color: orangered;
   font-size: 35px;
-  padding-right: 20px;
+  padding-right: 10px;
   margin-left: 30px;
 }
 
@@ -243,7 +244,8 @@ footer .copy p {
 
 #register-form input,
 #register-form textarea {
-  margin-bottom: 10px;
+  width : 350px;
+  margin-bottom: 30px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -251,10 +253,35 @@ footer .copy p {
 
 #register-form button {
   padding: 10px;
-  background-color: #333;
+  background-color:orangered;
   color: #fff;
   border: none;
   cursor: pointer;
   border-radius: 4px;
 }
 
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 20px; /* Adjust margin as needed */
+}
+
+.profile-container img {
+  
+  width: 300px; /* Adjust image width */
+  border-radius: 50%;
+  border: 1px solid grey;
+}
+
+.profile-container h1 {
+  font-size: 90px; /* Username font size */
+  margin-top: 20px; /* Adjust margin as needed */
+}
+
+.profile-container p {
+ 
+  font-size: 30px; /* Email font size */
+  margin-top: 40px; /* Adjust margin as needed */
+}

@@ -2,8 +2,56 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ReviewsContext from "./ReviewsContext";
 
 function ReviewForm() {
+  const { reviews, addReview, updateReview, deleteReview } = useContext(ReviewsContext);
+  const [newReview, setNewReview] = useState("");
+  const [editReview, setEditReview] = useState(null);
+
+  const handleAddReview = () => {
+    if (newReview.trim() === "") {
+      toast.error("Review cannot be empty");
+      return;
+    }
+
+    const review = {
+      id: Date.now(),
+      text: newReview,
+    };
+
+    addReview(review);
+    setNewReview("");
+    toast.success("Review added successfully");
+  };
+
+  const handleUpdateReview = () => {
+    if (newReview.trim() === "") {
+      toast.error("Review cannot be empty");
+      return;
+    }
+
+    const updatedReview = {
+      ...editReview,
+      text: newReview,
+    };
+
+    updateReview(updatedReview);
+    setEditReview(null);
+    setNewReview("");
+    toast.success("Review updated successfully");
+  };
+
+  const handleEditClick = (review) => {
+    setEditReview(review);
+    setNewReview(review.text);
+  };
+
+  const handleDeleteClick = (id) => {
+    deleteReview(id);
+    toast.success("Review deleted successfully");
+  };
+
 
   return (
     <div id="main">
@@ -33,7 +81,20 @@ function ReviewForm() {
         <input className="srch" type="search" placeholder="Search"  />
       </div>
       <div className="container">
-      
+      <input
+          type="text"
+          value={newReview}
+          onChange={(e) => setNewReview(e.target.value)}
+          placeholder="Write a review"
+        /><div className="reviews-list">
+          {reviews.map((review) => (
+            <div key={review.id} className="review-item">
+              <p>{review.text}</p>
+              <button onClick={() => handleEditClick(review)}>Edit</button>
+              <button onClick={() => handleDeleteClick(review.id)}>Delete</button>
+            </div>
+          ))}
+        </div>
       </div>
       <footer>
         <p>PresentSpotter</p>

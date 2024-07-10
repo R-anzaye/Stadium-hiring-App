@@ -13,7 +13,10 @@ function BookPitch() {
           <h2 className="logo">PresentSpotter</h2>
         </div>
         <div className="menu">
-          <ul>
+          <ul> 
+            <li>
+                <Link to="/">Home</Link>
+              </li>
             <li><Link to="/bookpitch">Book Pitch</Link></li>
             <li><Link to="/reviews">Reviews</Link></li>
           </ul>
