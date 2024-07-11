@@ -1,7 +1,5 @@
-import React, { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 export const UserContext = createContext();
 
@@ -13,34 +11,9 @@ export const UserProvider = ({ children }) => {
   );
 
   const [currentUser, setCurrentUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);  // Add isAdmin state- added line 
 
-  
-  const fetchUser = () => {
-    if (authToken) {
-      fetch("http://127.0.0.1:5555/current_user", {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      })
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error(res.statusText);
-          }
-          return res.json();
-        })
-        .then((user) => {
-          setCurrentUser(user);
-        })
-        .catch((error) => {
-          console.error("Error fetching user:", error);
-          toast.error("Failed to fetch user. Please try again later.");
-          setCurrentUser(null);
-        });
-    } else {
-      setCurrentUser(null);
-    }
-  };
-  
+  // Register User
   const register = (username, email, password) => {
     return fetch("http://127.0.0.1:5555/users", {
       method: "POST",
@@ -56,19 +29,19 @@ export const UserProvider = ({ children }) => {
       .then((res) => res.json())
       .then((res) => {
         if (res.success) {
-          toast.success(res.success);
           nav("/");
           return res;
         } else if (res.error) {
-          toast.error(res.error);
+          alert(res.error);
           return null;
         } else {
-          toast.error("Something went wrong");
+          alert("Something went wrong");
           return null;
         }
       });
   };
 
+  // Login User
   const login = (email, password) => {
     return fetch("http://127.0.0.1:5555/login", {
       method: "POST",
@@ -85,53 +58,60 @@ export const UserProvider = ({ children }) => {
         if (res.access_token) {
           setAuthToken(res.access_token);
           localStorage.setItem("token", res.access_token);
-          fetchUser();
-          toast.success("Login success");
           nav("/");
+          
           return res;
         } else if (res.error) {
-          toast.error(res.error);
+          alert(res.error);
           return null;
         } else {
-          toast.error("Something went wrong");
+          alert("Something went wrong");
           return null;
         }
       });
   };
 
+  // Logout User
   const logout = () => {
     fetch("http://127.0.0.1:5555/logout", {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `Bearer ${authToken}`, 
       },
     })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! Status: ${res.status}`);
-        }
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((res) => {
         if (res.success) {
           setAuthToken(null);
-          setCurrentUser(null);
           localStorage.removeItem("token");
-          toast.success("Logout success");
           nav("/");
         } else {
-          toast.error("Logout failed: Server response was not successful.");
+          alert("Something went wrong");
         }
-      })
-      .catch((error) => {
-        console.error("Logout error:", error);
-        toast.error("Something went wrong during logout.");
       });
   };
 
+  useEffect(() => {
+    if (authToken) {
+      fetch("http://127.0.0.1:5555/current_user", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`, 
+        },
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          setCurrentUser(res);
+        });
+    } else {
+      setCurrentUser(null);
+      setIsAdmin(false);
+    }
+  }, [authToken]);
+
   const contextData = {
-    authToken,
     currentUser,
     register,
     login,

@@ -137,6 +137,27 @@ def delete_user(id):
 
 # Pitch CRUD Operations (admin)
 # Create pitch
+# Fetch all pitches
+@app.route('/get_pitches', methods=['GET'])
+@jwt_required()
+def get_pitches():
+    pitches = Pitch.query.all()
+
+    # Transform pitches to a list of dictionaries for JSON response
+    pitches_list = []
+    for pitch in pitches:
+        pitches_list.append({
+            'id': pitch.id,
+            'name': pitch.name,
+            'description': pitch.description,
+            'location': pitch.location,
+            'price_per_hour': pitch.price_per_hour,
+            "image":pitch.image_data
+            # Add more fields as needed
+        })
+
+    return jsonify({"pitches": pitches_list}), 200
+
 @app.route('/pitches', methods=['POST'])
 @jwt_required()
 def create_pitch():
@@ -186,7 +207,7 @@ def delete_pitch(id):
     return jsonify({"message": "Pitch deleted successfully"}), 200
 
 # Booking CRUD Operations (user)
-# Create booking
+
 @app.route('/bookings', methods=['POST'])
 @jwt_required()
 def create_booking():
@@ -206,6 +227,22 @@ def create_booking():
     db.session.add(new_booking)
     db.session.commit()
     return jsonify({"success": "Booking created successfully"}), 201
+@app.route('/get_bookings', methods=['GET'])
+@jwt_required()
+def get_bookings():
+    bookings = Booking.query.all()
+
+    # Transform pitches to a list of dictionaries for JSON response
+    bookings_list = []
+    for booking in bookings:
+        bookings_list.append({
+            'id': booking.id,
+            'pitch_id': booking.pitch_id,
+            'date': booking.date  
+        })
+
+    return jsonify({"bookings": bookings_list}), 200
+
 
 # Update a booking
 @app.route('/bookings/<int:id>', methods=['PUT'])
@@ -233,21 +270,34 @@ def delete_booking(id):
     db.session.delete(booking)
     db.session.commit()
     return jsonify({"message": "Booking deleted successfully"}), 200
-
 # Rating CRUD Operations (user)
-# Add a rating
+
 @app.route('/ratings', methods=['POST'])
 @jwt_required()
 def create_rating():
     data = request.get_json()
+
+    # Ensure all required fields are present in the request
+    required_fields = ['pitch_id', 'rating', 'comment']
+    for field in required_fields:
+        if field not in data:
+            return jsonify({"error": f"Missing '{field}' field in request"}), 400
+
     current_user_id = get_jwt_identity()
     current_user = User.query.get(current_user_id)
+    
+    # Fetch the Pitch object associated with the rating
+    pitch_id = data['pitch_id']
+    pitch = Pitch.query.get(pitch_id)
+    
+    if not pitch:
+        return jsonify({"error": "Pitch not found"}), 404
 
     if current_user.is_admin:
-        return jsonify({"error": "Admins cannot do ratings"}), 400
+        return jsonify({"error": "Admins cannot create ratings"}), 400
 
     new_rating = Rating(
-        pitch_id=data['pitch_id'],
+        pitch_id=pitch.id,
         user_id=current_user_id,
         rating=data['rating'],
         comment=data['comment']
@@ -255,9 +305,18 @@ def create_rating():
 
     db.session.add(new_rating)
     db.session.commit()
-    return jsonify({"success": "Rating created successfully"}), 201
 
-# Update a rating
+    # Return the newly created rating in the response
+    return jsonify({
+        "success": "Rating created successfully",
+        "rating": {
+            "id": new_rating.id,
+            "pitch_id": new_rating.pitch_id,
+            "user_id": new_rating.user_id,
+            "rating": new_rating.rating,
+            "comment": new_rating.comment
+        }
+    }), 201
 @app.route('/ratings/<int:id>', methods=['PUT'])
 @jwt_required()
 def update_rating(id):
@@ -286,9 +345,6 @@ def delete_rating(id):
     return jsonify({"message": "Rating deleted successfully"}), 200
 
 # Get all ratings
-from flask import jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity
-from models import Rating, Pitch  # Assuming you have your SQLAlchemy models defined
 
 @app.route('/ratings_list', methods=['GET'])
 @jwt_required()
@@ -309,7 +365,7 @@ def get_all_ratings():
             'rating': rating.rating,
             'comment': rating.comment,
             'pitch_name': pitch.name,
-            'pitch_image_url': pitch.image_url
+            'pitch_image_url': pitch.image_data
         }
         rating_list.append(rating_data)
 

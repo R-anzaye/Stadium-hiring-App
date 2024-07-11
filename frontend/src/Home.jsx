@@ -18,7 +18,6 @@ function Home() {
     e.preventDefault();
     login(email, password).then((user) => {
       if (user) {
-        toast.success('Logged in successfully!');
         setShowForm(false);
       } else {
         toast.error('Login failed. Please check your credentials.');
@@ -56,7 +55,6 @@ function Home() {
 
   const handleLogout = () => {
     logout();
-    toast.success('Logged out successfully!');
   };
 
   return (

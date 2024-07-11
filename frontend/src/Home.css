@@ -325,3 +325,86 @@ footer .copy p {
 .card span {
   font-weight: bold;
 }
+
+
+
+
+.tent {
+  text-align: center;
+  margin: 20px 0;
+}
+
+
+.add-review {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.add-review button {
+  background-color: #007BFF;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.add-review select,
+.add-review input {
+  padding: 10px;
+  margin: 5px 0;
+  font-size: 16px;
+}
+
+.add-review button:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.review-item {
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin: 10px;
+  width: 80%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.review-item h3 {
+  margin-top: 0;
+}
+
+.btn-edit, .btn-update, .btn-delete {
+  border: none;
+  padding: 5px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  margin: 5px;
+  border-radius: 4px;
+}
+
+.btn-edit {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.btn-update {
+  background-color: #17a2b8;
+  color: #fff;
+}
+
+.btn-delete {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+

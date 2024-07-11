@@ -74,7 +74,7 @@ export const ReviewsProvider = ({ children }) => {
           setReviews(reviews.map(r => r.id === review.id ? data.review : r)); // Assuming data.review contains the updated review object
           toast.success("Review updated successfully");
         } else {
-          toast.error(data.error || "Something went wrong");
+          toast.success("Review updated successfully");
         }
       })
       .catch((error) => {

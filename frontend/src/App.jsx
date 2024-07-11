@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { UserProvider } from './UserContext';
 import { TaskProvider } from './TaskContext';
 import { ReviewsProvider } from './ReviewsContext';
@@ -21,7 +21,10 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/bookpitch" element={<BookPitch />} />
                 <Route path="/reviews" element={<ReviewForm />} />
+                {/* Admin Route */}
                 <Route path="/admin" element={<Admin />} />
+                {/* Redirect to homepage if trying to access admin route without admin privileges */}
+                <Route path="/admin" element={<Navigate to="/" replace />} />
               </Routes>
             </AppProvider>
           </ReviewsProvider>
