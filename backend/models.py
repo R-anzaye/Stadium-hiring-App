@@ -39,7 +39,7 @@ class Pitch(db.Model, SerializerMixin):
     description = db.Column(db.String(255), nullable=False)
     location = db.Column(db.String(100), nullable=False)
     price_per_hour = db.Column(db.Float, nullable=False)
-    image_data = db.Column(db.String, nullable=False)
+    
     bookings = db.relationship('Booking', back_populates='pitch', lazy=True)
     ratings = db.relationship('Rating', back_populates='pitch', lazy=True)
     users = db.relationship('User', secondary=pitches_users, lazy='subquery',

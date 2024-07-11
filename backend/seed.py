@@ -18,36 +18,34 @@ def seed_pitches():
             name='Camp Nou',
             description='Home stadium of FC Barcelona.',
             location='Barcelona, Spain',
-            price_per_hour=200.0,
-            image_data='https://example.com/campnou.jpg'
+            price_per_hour=200.0
+           
         ),
         Pitch(
             name='Old Trafford',
             description='Home stadium of Manchester United.',
             location='Manchester, England',
-            price_per_hour=250.0,
-            image_data='https://example.com/oldtrafford.jpg'
+            price_per_hour=250.0
         ),
         Pitch(
             name='Santiago Bernabéu',
             description='Home stadium of Real Madrid.',
             location='Madrid, Spain',
-            price_per_hour=220.0,
-            image_data='https://example.com/bernabeu.jpg'
+            price_per_hour=220.0
+            
         ),
         Pitch(
             name='Allianz Arena',
             description='Home stadium of Bayern Munich.',
             location='Munich, Germany',
-            price_per_hour=230.0,
-            image_data='https://example.com/allianz.jpg'
+            price_per_hour=230.0
+           
         ),
         Pitch(
             name='San Siro',
             description='Home stadium of AC Milan and Inter Milan.',
             location='Milan, Italy',
-            price_per_hour=210.0,
-            image_data='https://example.com/sansiro.jpg'
+            price_per_hour=210.0
         ),
     ]
     db.session.add_all(pitches)

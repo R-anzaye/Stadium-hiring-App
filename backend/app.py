@@ -44,7 +44,15 @@ def login_user():
 
     if user and bcrypt.check_password_hash(user.password, password):
         access_token = create_access_token(identity=user.id)
-        return jsonify({"access_token": access_token})
+        return jsonify({
+            "access_token": access_token,
+            "user": {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "is_admin": user.is_admin
+            }
+        })
     else:
         return jsonify({"error": "Wrong credentials"}), 401
 
@@ -151,8 +159,7 @@ def get_pitches():
             'name': pitch.name,
             'description': pitch.description,
             'location': pitch.location,
-            'price_per_hour': pitch.price_per_hour,
-            "image":pitch.image_data
+            'price_per_hour': pitch.price_per_hour
             # Add more fields as needed
         })
 
