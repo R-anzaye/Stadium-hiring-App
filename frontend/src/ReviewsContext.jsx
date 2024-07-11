@@ -20,7 +20,15 @@ export const ReviewsProvider = ({ children }) => {
         Authorization: `Bearer ${authToken}`,
       },
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          return res.json().then((data) => {
+            const error = data.message || "Unknown error";
+            throw new Error(error);
+          });
+        }
+        return res.json();
+      })
       .then((data) => {
         if (Array.isArray(data)) {
           setReviews(data);
@@ -29,9 +37,11 @@ export const ReviewsProvider = ({ children }) => {
         }
       })
       .catch((error) => {
-        console.error("Error fetching ratings:", error);
+        console.error("Error fetching ratings:", error.message || error);
+        toast.error(`Failed to fetch ratings: ${error.message || "Unknown error"}`);
       });
   };
+  
 
   // Add a review
   const addReview = (review) => {

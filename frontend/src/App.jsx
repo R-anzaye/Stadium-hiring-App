@@ -4,11 +4,11 @@ import { UserProvider } from './UserContext';
 import { TaskProvider } from './TaskContext';
 import { ReviewsProvider } from './ReviewsContext';
 import { AppProvider } from './AppContext';
-
 import Home from './Home';
 import BookPitch from './BookPitch';
 import ReviewForm from './ReviewForm';
 import Admin from './admin';
+import BookForm from './BookForm';
 
 function App() {
   return (
@@ -21,9 +21,9 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/bookpitch" element={<BookPitch />} />
                 <Route path="/reviews" element={<ReviewForm />} />
-                {/* Admin Route */}
+                <Route path="/book/:id" element={<BookForm/>} />
                 <Route path="/admin" element={<Admin />} />
-                {/* Redirect to homepage if trying to access admin route without admin privileges */}
+           
                 <Route path="/admin" element={<Navigate to="/" replace />} />
               </Routes>
             </AppProvider>

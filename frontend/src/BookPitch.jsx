@@ -93,6 +93,7 @@ function Bookings() {
               <h3>{pitch.name}</h3>
               <p>{pitch.description}</p>
               <p><span>Price per Hour:</span> ${pitch.price_per_hour}</p>
+              <Link to={`/book/${pitch.id}`}>Book</Link>
             </div>
           ))
         )}

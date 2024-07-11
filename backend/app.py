@@ -365,7 +365,7 @@ def get_all_ratings():
             'rating': rating.rating,
             'comment': rating.comment,
             'pitch_name': pitch.name,
-            'pitch_image_url': pitch.image_data
+            'pitch_image_data': pitch.image_data
         }
         rating_list.append(rating_data)
 
