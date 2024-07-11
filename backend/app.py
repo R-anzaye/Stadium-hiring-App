@@ -220,20 +220,25 @@ def delete_pitch(id):
 def create_booking():
     data = request.get_json()
     current_user_id = get_jwt_identity()
-    current_user = User.query.get(current_user_id)
-
-    if current_user.is_admin:
-        return jsonify({"error": "Admins cannot do bookings"}), 400
 
     new_booking = Booking(
         pitch_id=data['pitch_id'],
         user_id=current_user_id,
-        date=datetime.strptime(data['date'], '%Y-%m-%d %H:%M:%S')
+        date=datetime.strptime(data['date'], '%Y-%m-%dT%H:%M')
     )
 
     db.session.add(new_booking)
     db.session.commit()
-    return jsonify({"success": "Booking created successfully"}), 201
+
+    booking_data = {
+        'id': new_booking.id,
+        'pitch_id': new_booking.pitch_id,
+        'user_id': new_booking.user_id,
+        'date': new_booking.date.isoformat(),
+    }
+
+    return jsonify(booking_data), 201
+
 @app.route('/get_bookings', methods=['GET'])
 @jwt_required()
 def get_bookings():
@@ -252,31 +257,64 @@ def get_bookings():
 
 
 # Update a booking
-@app.route('/bookings/<int:id>', methods=['PUT'])
+@app.route('/bookings/<int:booking_id>', methods=['PUT'])
 @jwt_required()
-def update_booking(id):
+def update_booking(booking_id):
     data = request.get_json()
-    booking = Booking.query.get(id)
-    if booking is None:
-        return jsonify({"message": "Booking not found"}), 404
+    booking = Booking.query.get_or_404(booking_id)
 
-    booking.pitch_id = data.get('pitch_id', booking.pitch_id)
-    booking.user_id = data.get('user_id', booking.user_id)
-    booking.date = datetime.strptime(data.get('date', booking.date.strftime('%Y-%m-%d %H:%M:%S')), '%Y-%m-%d %H:%M:%S')
+    booking.pitch_id = data['pitch_id']
+    booking.date = datetime.strptime(data['date'], '%Y-%m-%dT%H:%M')
+
     db.session.commit()
-    return jsonify({"message": "Booking updated successfully"}), 200
+
+    booking_data = {
+        'id': booking.id,
+        'pitch_id': booking.pitch_id,
+        'user_id': booking.user_id,
+        'date': booking.date.isoformat(),
+    }
+
+    return jsonify(booking_data), 200
 
 # Delete/cancel a booking
-@app.route('/bookings/<int:id>', methods=['DELETE'])
+@app.route('/bookings/<int:booking_id>', methods=['DELETE'])
 @jwt_required()
-def delete_booking(id):
-    booking = Booking.query.get(id)
-    if booking is None:
-        return jsonify({"message": "Booking not found"}), 404
+def delete_booking(booking_id):
+    booking = Booking.query.get_or_404(booking_id)
 
     db.session.delete(booking)
     db.session.commit()
-    return jsonify({"message": "Booking deleted successfully"}), 200
+
+    return jsonify({'message': 'Booking deleted successfully'}), 200
+# Add a new route to fetch all bookings with pitch and user details (admin only)
+@app.route('/admin/bookings', methods=['GET'])
+@jwt_required()
+def get_admin_bookings():
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+
+    if not user.is_admin:
+        return jsonify({"error": "Unauthorized"}), 403
+
+    bookings = Booking.query.all()
+
+    booking_list = []
+    for booking in bookings:
+        pitch = Pitch.query.get(booking.pitch_id)
+        user = User.query.get(booking.user_id)
+        if pitch and user:
+            booking_data = {
+                'id': booking.id,
+                'pitch_name': pitch.name,
+                'username': user.username,
+                'date': booking.date.isoformat()
+            }
+            booking_list.append(booking_data)
+
+    return jsonify({"bookings": booking_list}), 200
+
+
 # Rating CRUD Operations (user)
 
 @app.route('/ratings', methods=['POST'])
