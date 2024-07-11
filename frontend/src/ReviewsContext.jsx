@@ -38,7 +38,7 @@ export const ReviewsProvider = ({ children }) => {
       })
       .catch((error) => {
         console.error("Error fetching ratings:", error.message || error);
-        toast.error(`Failed to fetch ratings: ${error.message || "Unknown error"}`);
+        
       });
   };
   

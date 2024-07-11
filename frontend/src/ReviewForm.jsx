@@ -192,7 +192,7 @@ function ReviewForm() {
                           &#10003;
                         </button>
                         <button className="btn-delete" onClick={() => handleDelete(selectedReview.id)}>
-                          &#10005;
+                        &#10005;
                         </button>
                       </>
                     ) : (
