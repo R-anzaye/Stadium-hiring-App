@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {server_url} from "../config";
 
 function AdminBookings() {
   const [bookings, setBookings] = useState([]);
@@ -14,7 +15,7 @@ function AdminBookings() {
   const fetchBookings = async () => {
     try {
       setLoading(true); // Set loading state to true
-      const response = await fetch('http://127.0.0.1:5555/admin/bookings', {
+      const response = await fetch(`${server_url}/admin/${bookings}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`

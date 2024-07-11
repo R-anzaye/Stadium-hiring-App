@@ -3,6 +3,8 @@ import { AppContext } from './AppContext';
 import { Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {server_url} from "../config";
+
 
 function Bookings() {
   const { bookings, loading, addBooking, updateBooking, deleteBooking } = useContext(AppContext);
@@ -17,7 +19,7 @@ function Bookings() {
 
   const fetchPitches = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:5555/get_pitches', {
+      const response = await fetch(`${server_url}/get_pitches`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -43,7 +45,7 @@ function Bookings() {
     e.preventDefault();
     if (editingBooking) {
       try {
-        const response = await fetch(`http://127.0.0.1:5555/bookings/${editingBooking.id}`, {
+        const response = await fetch(`${server_url}/bookings/${editingBookingId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -63,7 +65,7 @@ function Bookings() {
       }
     } else {
       try {
-        const response = await fetch('http://127.0.0.1:5555/bookings', {
+        const response = await fetch(`${server_url}/bookings`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -88,7 +90,7 @@ function Bookings() {
 
   const handleDeleteBooking = async (bookingId) => {
     try {
-      const response = await fetch(`http://127.0.0.1:5555/bookings/${bookingId}`, {
+      const response = await fetch(`${server_url}/bookings/${bookingId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`

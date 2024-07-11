@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
+import {server_url} from "../config";
+
 
 export const AdminContext = createContext();
 
@@ -10,7 +12,7 @@ export const AdminProvider = ({ children }) => {
   // Function to fetch all pitches
   const fetchPitches = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:5555/get_pitches', {
+      const response = await fetch(`${server_url}/get_pitches`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -29,7 +31,7 @@ export const AdminProvider = ({ children }) => {
   // Function to add a new pitch
   const addPitch = async (pitchData) => {
     try {
-      const response = await fetch('http://127.0.0.1:5555/pitches', {
+      const response = await fetch(`${server_url}/pitches`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -50,7 +52,7 @@ export const AdminProvider = ({ children }) => {
   // Function to delete a pitch by ID
   const deletePitch = async (pitchId) => {
     try {
-      const response = await fetch(`http://127.0.0.1:5555/pitches/${pitchId}`, {
+      const response = await fetch(`${server_url}/pitches/${pitchId}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -68,7 +70,7 @@ export const AdminProvider = ({ children }) => {
   // Function to update a pitch
   const updatePitch = async (pitchId, updatedData) => {
     try {
-      const response = await fetch(`http://127.0.0.1:5555/pitches/${pitchId}`, {
+      const response = await fetch(`${server_url}/pitches/${pitchId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -1,6 +1,8 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { UserContext } from "./UserContext";
 import { toast } from "react-toastify";
+import {server_url} from "../config";
+
 
 export const ReviewsContext = createContext();
 
@@ -14,7 +16,7 @@ export const ReviewsProvider = ({ children }) => {
 
   // Fetch all ratings
   const fetchRatings = () => {
-    fetch("http://127.0.0.1:5555/ratings_list", {
+    fetch(`${server_url}/ratings_list`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${authToken}`,
@@ -45,7 +47,7 @@ export const ReviewsProvider = ({ children }) => {
 
   // Add a review
   const addReview = (review) => {
-    fetch("http://127.0.0.1:5555/ratings", {
+    fetch(`${server_url}/ratings`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -70,7 +72,7 @@ export const ReviewsProvider = ({ children }) => {
 
   // Update a review
   const updateReview = (review) => {
-    fetch(`http://127.0.0.1:5555/ratings/${review.id}`, {
+    fetch(`${server_url}/ratings/${review.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -95,7 +97,7 @@ export const ReviewsProvider = ({ children }) => {
 
   // Delete a review
   const deleteReview = (reviewId) => {
-    fetch(`http://127.0.0.1:5555/ratings/${reviewId}`, {
+    fetch(`${server_url}/ratings/${reviewId}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${authToken}`,

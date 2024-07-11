@@ -2,10 +2,12 @@ import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from 'axios'; 
+
 import { ReviewsContext } from "./ReviewsContext";
 import { UserContext } from "./UserContext";
-import './Home.css'; // Import the CSS file
+import './Home.css'; 
+import {server_url} from "../config";
+
 
 function ReviewForm() {
   const { reviews, addReview, updateReview, deleteReview, fetchRatings } = useContext(ReviewsContext);
@@ -26,7 +28,7 @@ function ReviewForm() {
 
   const fetchPitches = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:5555/get_pitches',{
+      const response = await fetch(`${server_url}/get_pitches`,{
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`

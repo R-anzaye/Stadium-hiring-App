@@ -3,6 +3,7 @@ import React, { useState, useEffect, createContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {server_url} from "../config";
 
 export const UserContext = createContext();
 
@@ -19,7 +20,7 @@ export const UserProvider = ({ children }) => {
   const fetchUser = async () => {
     if (authToken) {
       try {
-        const res = await fetch('http://127.0.0.1:5555/current_user', {
+        const res = await fetch(`${server_url}/current_user`, {
           headers: {
             Authorization: `Bearer ${authToken}`,
           },
@@ -54,7 +55,7 @@ export const UserProvider = ({ children }) => {
 
   const register = async (username, email, password) => {
     try {
-      const res = await fetch('http://127.0.0.1:5555/users', {
+      const res = await fetch(`${server_url}/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -84,7 +85,7 @@ export const UserProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const res = await fetch('http://127.0.0.1:5555/login', {
+      const res = await fetch(`${server_url}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -123,7 +124,7 @@ export const UserProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      const res = await fetch('http://127.0.0.1:5555/logout', {
+      const res = await fetch(`${server_url}/logout`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
