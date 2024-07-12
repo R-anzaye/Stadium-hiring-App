@@ -5,14 +5,18 @@ from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from datetime import timedelta, datetime
 import random
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
+postgres_pwd = os.getenv("POSTGRES_PWD")
 from models import db, User, Pitch, Booking, Rating
 
 # Initialize Flask app
 app = Flask(__name__)
 
 # Configure your database URI here
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///pitches.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://pitches_db_06vs_user:{postgres_pwd}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["SECRET_KEY"] = "jdhfvksdjkgh" + str(random.randint(1, 1000000))
 app.config["JWT_SECRET_KEY"] = "evrfsejhfgvret" + str(random.randint(1, 1000000))
