@@ -45,8 +45,57 @@ PresentSpotter is a web application for booking football pitches. The applicatio
 - virtualenv
 
 ### Backend Setup
+# Clone the repository:
 
-1. **Clone the repository:**
+- git clone https://github.com/WendyKariuki/Stadium-hiring-App.git
+- cd Stadium-hiring-App/backend
+- 
+## Set up virtual environment and install dependencies:
 
-   ```sh
-   https://github.com/WendyKariuki/Stadium-hiring-App.git 
+- source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+- pip install -r requirements.txt
+## Set environment variables:
+
+- export FLASK_APP=run.py
+- export FLASK_ENV=development  # Use `production` for production
+- export SECRET_KEY='your_secret_key'
+- export DATABASE_URL='sqlite:///your_database.db'
+
+## Run the server:
+- flask run
+
+## Navigate to the frontend directory:
+- cd ../frontend
+  
+## Install dependencies:
+
+- npm install
+- npm run dev
+
+# Usage
+- Register a New User
+- To register a new user, navigate to the registration page and fill out the form with required details.
+
+# Login
+- Once registered, use the login page to access your account using your credentials.
+
+# Book a Pitch
+-Navigate to the pitch booking page, select your desired pitch and date, and confirm your booking.
+
+# Leave a Review
+- After booking, you can leave a review and rating for the pitch you booked.
+
+# Admin Functionalities
+- Admins can manage pitches, view user bookings, and perform administrative tasks from the admin dashboard.
+
+# Contributing
+- Contributions are welcome! For major changes, please open an issue first to discuss what you would like to change.
+
+# License
+MIT
+
+# Creators:
+- Ryan Anzaye
+- Reuben Kamau
+- Wendy Kariuki
+- Visit the live website: https://6691a11333078d546524debc--eclectic-manatee-1b08d4.netlify.app/
