@@ -4,6 +4,7 @@ import { UserContext } from './UserContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+
 function Home() {
   const [showForm, setShowForm] = useState(false);
   const [formType, setFormType] = useState('login'); // 'login' or 'register'
@@ -13,6 +14,7 @@ function Home() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(null);
+  const [role, setRole] = useState('user');
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -33,7 +35,7 @@ function Home() {
       return;
     }
 
-    register(username, email, password).then((user) => {
+    register(username, email, password,role).then((user) => {
       if (user) {
         toast.success('Registration successful! Please log in.');
         setShowForm(true);
@@ -176,7 +178,30 @@ function Home() {
                       onChange={(e) => setConfirmPassword(e.target.value)}
                     />
                   </div>
-                  <button type="submit">Register</button>
+                 
+                  <label>
+                  Regular User
+            <input
+                type="radio"
+                name="role"
+                value="user"
+                checked={role === 'user'}
+                onChange={() => setRole('user')}
+            />
+            
+        </label>
+        <label>
+        Admin
+            <input
+                type="radio"
+                name="role"
+                value="admin"
+                checked={role === 'admin'}
+                onChange={() => setRole('admin')}
+            />
+          
+        </label>
+     <button type="submit">Register</button>
                 </form>
               )}
             </div>

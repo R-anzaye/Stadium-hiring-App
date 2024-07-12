@@ -53,15 +53,15 @@ export const UserProvider = ({ children }) => {
     fetchUser();
   }, [authToken]);
 
-  const register = async (username, email, password) => {
+  const register = async (username, email, password, role) => {
     try {
-      const res = await fetch(`${server_url}/users`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, email, password }),
-      });
+        const res = await fetch(`${server_url}/users`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username, email, password, is_admin: role === 'admin' }),
+        });
 
       const data = await res.json();
 

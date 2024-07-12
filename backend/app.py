@@ -83,7 +83,6 @@ def logout():
     BLACKLIST.add(jti)
     return jsonify({"success": "Successfully logged out"}), 200
 
-# Create user (user registration)
 @app.route('/users', methods=['POST'])
 def create_user():
     data = request.get_json()
@@ -92,15 +91,18 @@ def create_user():
     if email_exists:
         return jsonify({"error": "Email already exists"}), 400
 
+    is_admin = data.get('is_admin', False)  # Default to False if not provided
+
     new_user = User(
         username=data['username'],
         email=data['email'],
         password=bcrypt.generate_password_hash(data['password']).decode('utf-8'),
-        is_admin=data.get('is_admin', False)
+        is_admin=is_admin
     )
     db.session.add(new_user)
     db.session.commit()
     return jsonify({"success": "User created successfully"}), 201
+
 
 # Get user by id (admin)
 @app.route('/users/<int:id>', methods=['GET'])
